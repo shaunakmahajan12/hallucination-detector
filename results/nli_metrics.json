@@ -1,0 +1,96 @@
+{
+  "method": "nli",
+  "threshold_from_val": 0.994644,
+  "val": {
+    "precision": 0.1562,
+    "recall": 0.6012,
+    "f1": 0.2479,
+    "auroc": 0.635,
+    "n": 11713,
+    "hallucinated": 1294
+  },
+  "test": {
+    "precision": 0.117,
+    "recall": 0.6297,
+    "f1": 0.1973,
+    "auroc": 0.6395,
+    "n": 18965,
+    "hallucinated": 1561
+  },
+  "test_by_task": {
+    "Data2txt": {
+      "precision": 0.1429,
+      "recall": 0.5566,
+      "f1": 0.2275,
+      "auroc": 0.5914,
+      "n": 8229,
+      "hallucinated": 936
+    },
+    "QA": {
+      "precision": 0.1214,
+      "recall": 0.7793,
+      "f1": 0.2101,
+      "auroc": 0.7455,
+      "n": 5735,
+      "hallucinated": 367
+    },
+    "Summary": {
+      "precision": 0.0732,
+      "recall": 0.6822,
+      "f1": 0.1322,
+      "auroc": 0.6502,
+      "n": 5001,
+      "hallucinated": 258
+    }
+  },
+  "test_by_llm": {
+    "gpt-3.5-turbo-0613": {
+      "precision": 0.0238,
+      "recall": 0.569,
+      "f1": 0.0456,
+      "auroc": 0.5746,
+      "n": 3597,
+      "hallucinated": 58
+    },
+    "gpt-4-0613": {
+      "precision": 0.0199,
+      "recall": 0.4468,
+      "f1": 0.0381,
+      "auroc": 0.556,
+      "n": 2758,
+      "hallucinated": 47
+    },
+    "llama-2-13b-chat": {
+      "precision": 0.1359,
+      "recall": 0.6211,
+      "f1": 0.223,
+      "auroc": 0.6053,
+      "n": 3570,
+      "hallucinated": 380
+    },
+    "llama-2-70b-chat": {
+      "precision": 0.1349,
+      "recall": 0.6758,
+      "f1": 0.2249,
+      "auroc": 0.6326,
+      "n": 3010,
+      "hallucinated": 293
+    },
+    "llama-2-7b-chat": {
+      "precision": 0.1557,
+      "recall": 0.6178,
+      "f1": 0.2487,
+      "auroc": 0.62,
+      "n": 3228,
+      "hallucinated": 382
+    },
+    "mistral-7B-instruct": {
+      "precision": 0.2089,
+      "recall": 0.6459,
+      "f1": 0.3157,
+      "auroc": 0.6661,
+      "n": 2802,
+      "hallucinated": 401
+    }
+  }
+}

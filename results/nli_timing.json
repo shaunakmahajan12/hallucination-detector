@@ -1,0 +1,16 @@
+{
+  "model": "cross-encoder/nli-deberta-v3-base",
+  "device": "Tesla T4",
+  "val": {
+    "sentences": 11713,
+    "nli_pairs": 25113,
+    "seconds": 345.4,
+    "ms_per_sentence": 29.49
+  },
+  "test": {
+    "sentences": 18965,
+    "nli_pairs": 41851,
+    "seconds": 584.8,
+    "ms_per_sentence": 30.84
+  }
+}

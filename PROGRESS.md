@@ -25,7 +25,7 @@ Data2txt has the most hallucinations (~14% of train sentences) and Summary the f
 Source length: median ~320 words, p95 ~900, max ~1,750 (roughly 2,300 tokens).
 So a 2,048-token limit covers almost every source, and ModernBERT's 8k window isn't needed.
 
-## Step 2: zero-shot NLI baseline (code ready 2026-10-21, not run yet)
+## Step 2: zero-shot NLI baseline (done 2026-10-22)
 - `src/hd/baselines.py`: `cross-encoder/nli-deberta-v3-base`. The source is cut into 250-word windows with 50-word
   overlap, and score = 1 - max P(entailment) across windows. About 2.2 windows per sentence (~42k pairs on test).
 - `eval/evaluate.py` recomputes every metric from saved predictions: threshold from val F1, then test overall, by
@@ -36,8 +36,14 @@ So a 2,048-token limit covers almost every source, and ModernBERT's 8k window is
 Local disk cleanup (2026-10-21): deleted the old MLX Llama models and the first version's ModernBERT/NLI weights from
 `~/.cache/huggingface` (9.1 GB -> 2.0 GB). The Mac went from 15 GB to 22 GB free.
 
-## Open item (2026-10-21)
-The user has NLI baseline results from the deleted first version, still on Kaggle. They'll download the old notebook
-(Kaggle keeps its code) and its outputs. Compare the old data prep and baseline logic with `data/prepare.py` and
-`src/hd/baselines.py`. If they match, put the old outputs in `results/` and skip the rerun. If not, use them only as a
-sanity check and rerun `notebooks/nli_baseline_kaggle.ipynb`.
+Results (`results/nli_*`, Kaggle T4, 16 min total; recomputed locally from the saved predictions and they match):
+- Threshold from val F1 = 0.9946. Most faithful sentences still score near 1 because the model rarely gives
+  high entailment to paraphrases, so only a tiny score range separates the classes.
+- Test: F1 0.197, precision 0.117, recall 0.630, AUROC 0.640 (8.2% positives, so an all-positive guess gets F1 ~0.15).
+- By task: QA is best (AUROC 0.75), Data2txt worst (0.59). Structured JSON sources don't suit NLI.
+- By LLM: GPT-3.5/GPT-4 F1 ~0.04 (only 105 hallucinated sentences between them); Mistral best at F1 0.32.
+- The notebook builder now writes empty files with `!touch`, because `%%writefile` rejects an empty cell.
+
+The old Kaggle results were not reused; a fresh run was quicker than checking the old code.
+
+## Next: Step 3, fine-tuned detector (see the plan)
