@@ -20,8 +20,8 @@ from pathlib import Path
 from hd.data import load_sources, load_split
 
 ROOT = Path(__file__).resolve().parents[2]
-MODEL = "gemini-3.8-flash"
-PRICE_PER_M = {"input": 0.75, "output": 3.75}  # USD, paid standard tier through 2026-12-31 (output includes thinking)
+MODEL = "gemini-3.5-flash-lite"
+PRICE_PER_M = {"input": 0.30, "output": 2.50}  # USD, paid standard tier (output includes thinking)
 URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 
 PROMPT = """You are checking whether a sentence written by an AI assistant is supported by its source material.
@@ -86,8 +86,8 @@ def parse(resp: dict) -> tuple[int, dict]:
 
 
 class Judge:
-    def __init__(self, model: str, key: str, rpm: int, retries: int = 5):
-        self.url, self.key = URL.format(model=model), key
+    def __init__(self, model: str, key: str, rpm: int, retries: int = 8, thinking: str | None = None):
+        self.url, self.key, self.thinking = URL.format(model=model), key, thinking
         self.limiter, self.retries = RateLimiter(rpm), retries
 
     def post(self, body: dict) -> dict:
@@ -101,6 +101,8 @@ class Judge:
         body = {"contents": [{"role": "user", "parts": [{"text": PROMPT.format(source=source, sentence=sentence)}]}],
                 "generationConfig": {"temperature": 0, "responseMimeType": "application/json",
                                      "responseSchema": SCHEMA}}
+        if self.thinking:  # Gemini 3 thinks by default; a yes/no check rarely needs much of it
+            body["generationConfig"]["thinkingConfig"] = {"thinkingLevel": self.thinking}
         for attempt in range(self.retries + 1):
             self.limiter.wait()
             start = time.perf_counter()
@@ -117,7 +119,7 @@ class Judge:
             except (urllib.error.URLError, TimeoutError, KeyError, IndexError, ValueError) as e:
                 if attempt == self.retries:
                     raise SystemExit(f"Gemini call failed after retries: {e!r}") from e
-            time.sleep(min(60, 2 ** attempt * 2))
+            time.sleep(min(120, 2 ** attempt * 2))  # ~8 min in total: 503 'high demand' spells can last minutes
         raise AssertionError("unreachable")
 
 
@@ -125,22 +127,24 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=1000, help="test sentences to judge (fixed sample, seed 0)")
     ap.add_argument("--model", default=MODEL)
+    ap.add_argument("--thinking", choices=["minimal", "low", "medium", "high"], default="minimal")
     ap.add_argument("--rpm", type=int, default=10, help="requests per minute (free tier limits are low)")
+    ap.add_argument("--tag", default="gemini", help="results file name: results/<tag>_test.jsonl")
     ap.add_argument("--out", type=Path, default=Path("results"))
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    path = args.out / "gemini_test.jsonl"
+    path = args.out / f"{args.tag}_test.jsonl"
     done = {json.loads(line)["id"] for line in open(path)} if path.exists() else set()
     rows = [r for r in sample_test(args.n) if r["id"] not in done]
     print(f"{len(done)} already judged, {len(rows)} to go with {args.model}", flush=True)
     sources = load_sources()
-    judge = Judge(args.model, api_key(), args.rpm)
+    judge = Judge(args.model, api_key(), args.rpm, thinking=args.thinking)
     with open(path, "a") as f:
         for i, r in enumerate(rows, 1):
             label, usage, secs = judge(sources[r["source_id"]], r["sentence"])
             f.write(json.dumps({"id": r["id"], "task_type": r["task_type"], "model": r["model"], "label": r["label"],
-                                "score": float(label), "llm": args.model, "seconds": round(secs, 3), **usage}) + "\n")
+                                "score": float(label), "llm": args.model, "thinking": args.thinking, "seconds": round(secs, 3), **usage}) + "\n")
             f.flush()
             if i % 25 == 0 or i == len(rows):
                 print(f"{len(done) + i}/{args.n}", flush=True)

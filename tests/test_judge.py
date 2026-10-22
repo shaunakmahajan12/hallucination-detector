@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from hd import judge
-from hd.judge import Judge, RateLimiter, parse
+from hd.judge import PRICE_PER_M, Judge, RateLimiter, parse
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "eval"))
 from evaluate import judge_report  # noqa: E402
@@ -62,4 +62,5 @@ def test_judge_report_compares_methods_on_the_same_sentences(tmp_path):
     out = judge_report("gemini", tmp_path)
     assert out["sample"] == 4 and out["methods"]["gemini"]["f1"] == 1.0
     assert out["methods"]["nli"]["n"] == 4  # only the judged ids, not all 6
-    assert out["usd_per_1000_checks_paid_tier"] == round(1000 * (1000 * 0.75 + 100 * 3.75) / 1e6, 3)
+    usd = (1000 * PRICE_PER_M["input"] + 100 * PRICE_PER_M["output"]) / 1e6
+    assert out["usd_per_1000_checks_paid_tier"] == round(1000 * usd, 3)

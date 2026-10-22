@@ -46,16 +46,21 @@ Results (`results/nli_*`, Kaggle T4, 16 min total; recomputed locally from the s
 
 The old Kaggle results were not reused; a fresh run was quicker than checking the old code.
 
-## Step 2b: Gemini judge (code ready 2026-10-22, not run yet)
-- `src/hd/judge.py`, stdlib only (REST through urllib, nothing to install). Model `gemini-3.8-flash`: Gemini 2.0 Flash
-  from the plan was shut down 2026-06-01. Free tier; paid would be $0.75 in / $3.75 out per 1M tokens until 2026-12-31.
+## Step 2b: Gemini judge (running locally 2026-10-22)
+- `src/hd/judge.py`, stdlib only (REST through urllib, nothing to install). Model `gemini-3.5-flash-lite` with
+  `thinkingLevel: minimal`: ~0.8 s and ~10 output tokens per call, free tier; paid would be $0.30 in / $2.50 out per
+  1M tokens. Gemini 2.0 Flash from the plan was shut down 2026-06-01. `gemini-3.8-flash` was tried first: 30-110 s
+  per call, repeated 503 "high demand", and a 429 quota stop after a few calls, so it was dropped (its 2 rows were
+  set aside, not used).
 - Fixed sample: 1,000 test sentences (seed 0), 70 hallucinated. One call per sentence with the same source + sentence
   the detector sees, temperature 0, JSON schema answer {supported, hallucinated}. Rate limited (default 10 rpm),
-  retries 429/5xx, appends each answer to `results/gemini_test.jsonl` and resumes after a quota stop.
-- Key: `GEMINI_API_KEY` in the environment or in `.env` (gitignored). Run: `PYTHONPATH=src python3.11 -m hd.judge`
-  (~100 min at 10 rpm), then `python3.11 eval/evaluate.py --judge gemini`. That scores every other method with results
-  on exactly the same 1,000 sentences (at its own val threshold) and reports latency and cost per 1,000 checks.
+  retries 429/5xx for ~8 min, appends each answer to `results/<tag>_test.jsonl` (default tag `gemini`) and resumes
+  after a quota stop.
+- Key: `GEMINI_API_KEY` in `.env` (gitignored). Run: `PYTHONPATH=src python3.11 -m hd.judge` (~100 min at 10 rpm),
+  then `python3.11 eval/evaluate.py --judge gemini`. That scores every other method with results on exactly the same
+  1,000 sentences (at its own val threshold) and reports latency and cost per 1,000 checks.
 - Self-Refine has no `RateLimiter`/`safe_generate` (the plan's path doesn't exist), so a small one was written here.
+- Idea for later: Bespoke-MiniCheck-7B on Kaggle (4-bit) as a specialist-checker baseline.
 
 ## Step 3: fine-tuned ModernBERT (code ready 2026-10-22, not run yet)
 - `src/hd/model.py`: input is `[CLS] sentence [SEP] source [SEP]`, capped at 2,048 tokens. The sentence goes first, so
