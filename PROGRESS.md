@@ -35,3 +35,9 @@ So a 2,048-token limit covers almost every source, and ModernBERT's 8k window is
 
 Local disk cleanup (2026-10-21): deleted the old MLX Llama models and the first version's ModernBERT/NLI weights from
 `~/.cache/huggingface` (9.1 GB -> 2.0 GB). The Mac went from 15 GB to 22 GB free.
+
+## Open item (2026-10-21)
+The user has NLI baseline results from the deleted first version, still on Kaggle. They'll download the old notebook
+(Kaggle keeps its code) and its outputs. Compare the old data prep and baseline logic with `data/prepare.py` and
+`src/hd/baselines.py`. If they match, put the old outputs in `results/` and skip the rerun. If not, use them only as a
+sanity check and rerun `notebooks/nli_baseline_kaggle.ipynb`.
