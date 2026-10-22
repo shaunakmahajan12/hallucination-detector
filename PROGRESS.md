@@ -46,4 +46,19 @@ Results (`results/nli_*`, Kaggle T4, 16 min total; recomputed locally from the s
 
 The old Kaggle results were not reused; a fresh run was quicker than checking the old code.
 
-## Next: Step 3, fine-tuned detector (see the plan)
+## Step 3: fine-tuned ModernBERT (code ready 2026-10-22, not run yet)
+- `src/hd/model.py`: input is `[CLS] sentence [SEP] source [SEP]`, capped at 2,048 tokens. The sentence goes first, so
+  truncation only trims the source's tail. Each source is tokenized once. Batches are grouped by length under a padded
+  token budget (8,192 per micro-batch) instead of a fixed batch size.
+- `src/hd/train.py`: plain PyTorch loop. fp16 autocast + GradScaler, gradient accumulation 4, AdamW (lr 3e-5, no decay
+  on norms/biases), 6% linear warmup then linear decay, grad clip 1.0, BCE with pos_weight = sqrt(neg/pos) ~2.8
+  (the full ratio ~8 would hurt calibration). 2 epochs; the epoch with the best val F1 is saved and scored on test.
+  At startup it runs one forward/backward on a worst-case batch, so an out-of-memory error shows up in seconds.
+- Writes `results/ft_{val,test}.jsonl` + `ft_train_log.json` (per-epoch val metrics, tok/s, peak GPU memory,
+  truncation rate); `eval/evaluate.py --method ft` gives the same tables as the baseline.
+- Run it on Kaggle: `notebooks/train_kaggle.ipynb`. The first cell after setup is the smoke run (64 balanced examples,
+  train = val), and the notebook stops if val F1 < 0.9. Start it with *Save & Run All (Commit)* so it runs in the
+  background. Pass bar from the plan: val F1 must beat NLI's 0.248.
+- No torch on the Mac by design; `tests/test_model_and_train.py` covers packing, batching, LR schedule, class weights.
+  Tests run with `uvx --python 3.11 pytest`.
+- Not done yet: pushing the checkpoint to the HF Hub (needs an HF token as a Kaggle secret).
