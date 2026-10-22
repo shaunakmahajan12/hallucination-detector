@@ -1,0 +1,10 @@
+data/raw/
+data/processed/
+*.pt
+*.safetensors
+checkpoints/
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+.DS_Store
