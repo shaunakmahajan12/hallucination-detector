@@ -46,7 +46,7 @@ Results (`results/nli_*`, Kaggle T4, 16 min total; recomputed locally from the s
 
 The old Kaggle results were not reused; a fresh run was quicker than checking the old code.
 
-## Step 2b: Gemini judge (running locally 2026-10-22)
+## Step 2b: Gemini judge (494/1000 done 2026-10-22, paused on the free daily quota)
 - `src/hd/judge.py`, stdlib only (REST through urllib, nothing to install). Model `gemini-3.5-flash-lite` with
   `thinkingLevel: minimal`: ~0.8 s and ~10 output tokens per call, free tier; paid would be $0.30 in / $2.50 out per
   1M tokens. Gemini 2.0 Flash from the plan was shut down 2026-06-01. `gemini-3.8-flash` was tried first: 30-110 s
@@ -60,9 +60,16 @@ The old Kaggle results were not reused; a fresh run was quicker than checking th
   then `python3.11 eval/evaluate.py --judge gemini`. That scores every other method with results on exactly the same
   1,000 sentences (at its own val threshold) and reports latency and cost per 1,000 checks.
 - Self-Refine has no `RateLimiter`/`safe_generate` (the plan's path doesn't exist), so a small one was written here.
+- Free tier = 500 requests/day/model (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`), reset at midnight Pacific
+  (~3 a.m. Eastern). Stopped at 494 on 2026-10-22. To finish: rerun `PYTHONPATH=src python3.11 -m hd.judge` on
+  2026-10-23 (reaches 994, then stops on the quota) and once more on 2026-10-24 for the last 6. Same model, settings
+  and sample, so the rows stay comparable. `results/gemini_test.jsonl` is uncommitted until complete.
 - Idea for later: Bespoke-MiniCheck-7B on Kaggle (4-bit) as a specialist-checker baseline.
 
-## Step 3: fine-tuned ModernBERT (code ready 2026-10-22, not run yet)
+## Step 3: fine-tuned ModernBERT (training on Kaggle 2026-10-22)
+Epoch 0 val: F1 0.638, precision 0.654, recall 0.623, AUROC 0.907, threshold 0.638 (NLI val: F1 0.248, AUROC 0.635).
+~108 min/epoch at ~9,900 tok/s, peak GPU 8 GB. Waiting for epoch 1 and the test predictions in `results.zip`.
+
 - `src/hd/model.py`: input is `[CLS] sentence [SEP] source [SEP]`, capped at 2,048 tokens. The sentence goes first, so
   truncation only trims the source's tail. Each source is tokenized once. Batches are grouped by length under a padded
   token budget (8,192 per micro-batch) instead of a fixed batch size.
