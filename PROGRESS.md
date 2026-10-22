@@ -25,4 +25,13 @@ Data2txt has the most hallucinations (~14% of train sentences) and Summary the f
 Source length: median ~320 words, p95 ~900, max ~1,750 (roughly 2,300 tokens).
 So a 2,048-token limit covers almost every source, and ModernBERT's 8k window isn't needed.
 
-## Next: step 2, zero-shot NLI baseline (on Kaggle)
+## Step 2: zero-shot NLI baseline (code ready 2026-10-21, not run yet)
+- `src/hd/baselines.py`: `cross-encoder/nli-deberta-v3-base`. The source is cut into 250-word windows with 50-word
+  overlap, and score = 1 - max P(entailment) across windows. About 2.2 windows per sentence (~42k pairs on test).
+- `eval/evaluate.py` recomputes every metric from saved predictions: threshold from val F1, then test overall, by
+  task and by LLM. `src/hd/metrics.py` is plain Python and unit-tested.
+- Run it on Kaggle: `notebooks/nli_baseline_kaggle.ipynb` (built by `scripts/build_kaggle_notebook.py`, which embeds
+  the code). Download `results.zip` into `results/`. Estimated ~10 min on a T4.
+
+Local disk cleanup (2026-10-21): deleted the old MLX Llama models and the first version's ModernBERT/NLI weights from
+`~/.cache/huggingface` (9.1 GB -> 2.0 GB). The Mac went from 15 GB to 22 GB free.
