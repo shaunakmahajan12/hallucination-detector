@@ -66,9 +66,23 @@ The old Kaggle results were not reused; a fresh run was quicker than checking th
   and sample, so the rows stay comparable. `results/gemini_test.jsonl` is uncommitted until complete.
 - Idea for later: Bespoke-MiniCheck-7B on Kaggle (4-bit) as a specialist-checker baseline.
 
-## Step 3: fine-tuned ModernBERT (training on Kaggle 2026-10-22)
-Epoch 0 val: F1 0.638, precision 0.654, recall 0.623, AUROC 0.907, threshold 0.638 (NLI val: F1 0.248, AUROC 0.635).
-~108 min/epoch at ~9,900 tok/s, peak GPU 8 GB. Waiting for epoch 1 and the test predictions in `results.zip`.
+## Step 3: fine-tuned ModernBERT (run 1 done 2026-10-22)
+Run 1 (2 epochs, lr 3e-5, max_len 2048, pos_weight sqrt): best epoch = 1. Results in `results/ft_*`, recomputed
+locally from the saved predictions and they match Kaggle's.
+
+| | F1 | precision | recall | AUROC |
+|---|---|---|---|---|
+| val, epoch 0 | 0.638 | 0.654 | 0.623 | 0.907 |
+| val, epoch 1 | 0.671 | 0.712 | 0.635 | 0.917 |
+| **test** (threshold 0.650 from val) | **0.652** | 0.653 | 0.651 | **0.916** |
+| test, NLI baseline | 0.197 | 0.117 | 0.630 | 0.640 |
+
+- Test is close to val (F1 -0.02, AUROC equal), so no sign of overfitting to val or a split shift.
+- By task: Data2txt F1 0.718 (NLI's worst task is now the best), QA 0.589, Summary 0.446 (recall only 0.35).
+- By LLM: Mistral 0.722 and Llama-2 0.62-0.69; GPT-3.5 0.368 and GPT-4 0.454, but those rest on 58 and 47
+  hallucinated sentences, so they're noisy.
+- ~108 min/epoch at ~9,900 tok/s, peak GPU 8 GB, test inference 21.6 ms/sentence on the T4.
+- Checkpoint is only in that Kaggle run's output (`checkpoints/ft/`); not yet on the HF Hub.
 
 - `src/hd/model.py`: input is `[CLS] sentence [SEP] source [SEP]`, capped at 2,048 tokens. The sentence goes first, so
   truncation only trims the source's tail. Each source is tokenized once. Batches are grouped by length under a padded

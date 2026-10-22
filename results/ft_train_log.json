@@ -1,0 +1,57 @@
+{
+  "config": {
+    "model": "answerdotai/ModernBERT-base",
+    "max_len": "2048",
+    "token_budget": "8192",
+    "max_batch": "32",
+    "accum": "4",
+    "epochs": "2",
+    "lr": "3e-05",
+    "warmup": "0.06",
+    "weight_decay": "0.01",
+    "pos_weight": "sqrt",
+    "grad_ckpt": "False",
+    "limit": "None",
+    "smoke": "None",
+    "seed": "0",
+    "log_every": "100",
+    "out": "results",
+    "ckpt": "checkpoints/ft"
+  },
+  "device": "Tesla T4",
+  "train_truncated_frac": 0.0041,
+  "probe_peak_gpu_gb": 5.98,
+  "epochs": [
+    {
+      "epoch": 0,
+      "train_minutes": 108.5,
+      "train_tok_per_s": 9929,
+      "threshold": 0.637934,
+      "val": {
+        "precision": 0.6537,
+        "recall": 0.6229,
+        "f1": 0.6379,
+        "auroc": 0.9066,
+        "n": 11713,
+        "hallucinated": 1294
+      },
+      "peak_gpu_gb": 7.98
+    },
+    {
+      "epoch": 1,
+      "train_minutes": 107.8,
+      "train_tok_per_s": 9989,
+      "threshold": 0.650467,
+      "val": {
+        "precision": 0.7121,
+        "recall": 0.6345,
+        "f1": 0.671,
+        "auroc": 0.9167,
+        "n": 11713,
+        "hallucinated": 1294
+      },
+      "peak_gpu_gb": 7.98
+    }
+  ],
+  "test_ms_per_sentence": 21.59
+}
