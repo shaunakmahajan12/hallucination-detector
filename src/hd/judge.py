@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import random
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -111,11 +112,12 @@ class Judge:
                 label, usage = parse(resp)
                 return label, usage, time.perf_counter() - start
             except urllib.error.HTTPError as e:
-                detail = e.read().decode(errors="replace")[:300]
-                if e.code not in (429, 500, 502, 503, 504) or attempt == self.retries:
-                    raise SystemExit(f"Gemini HTTP {e.code}: {detail}") from e
-                if e.code == 429 and "PerDay" in detail:
+                detail = e.read().decode(errors="replace")
+                if e.code == 429 and "PerDay" in detail:  # the quota id sits far into the body, so check all of it
                     raise SystemExit("Daily quota used up; rerun tomorrow and it resumes where it stopped") from e
+                if e.code not in (429, 500, 502, 503, 504) or attempt == self.retries:
+                    raise SystemExit(f"Gemini HTTP {e.code}: {detail[:1000]}") from e
+                print(f"HTTP {e.code}, retry {attempt + 1}/{self.retries}", file=sys.stderr, flush=True)
             except (urllib.error.URLError, TimeoutError, KeyError, IndexError, ValueError) as e:
                 if attempt == self.retries:
                     raise SystemExit(f"Gemini call failed after retries: {e!r}") from e
