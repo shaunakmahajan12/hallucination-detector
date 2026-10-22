@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CODE = ["data/prepare.py", "src/hd/__init__.py", "src/hd/data.py", "src/hd/metrics.py", "src/hd/baselines.py",
-        "src/hd/model.py", "src/hd/train.py", "eval/evaluate.py"]
+        "src/hd/model.py", "src/hd/train.py", "src/hd/judge.py", "eval/evaluate.py"]
 RAGTRUTH = "https://raw.githubusercontent.com/ParticleMedia/RAGTruth/main/dataset"
 
 
