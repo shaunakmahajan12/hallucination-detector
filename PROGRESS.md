@@ -138,3 +138,25 @@ LLM-AggreFact (run 2026-10-22, `results/aggrefact_*`): `src/hd/aggrefact.py` sco
 
 Still to do: CPU latency/cost vs Gemini, reliability plot for the README,
 Gemini comparison once the judge finishes.
+
+## Step 5: API, Docker, CI (done 2026-10-23; CI green on GitHub)
+- `api/main.py`: FastAPI app factory. `POST /check {sources[], answer, question?}` returns one result per answer
+  sentence: text, character offsets, raw score, calibrated probability (Platt from val) and `hallucinated` at the
+  val threshold. `GET /health`. Model loads once at startup. Request limits in `api/settings.py` (pydantic-settings,
+  `HD_*` env vars; `HF_TOKEN` for the private Hub model).
+- `src/hd/detector.py` is the inference path: same sentence splitter as training (moved to `hd.sentences`;
+  `prepare.py` output verified byte-identical), sources formatted like RAGTruth (`passage i:`, `Question:`), long
+  sources windowed (min over windows; `hd.model.windows/build`, shared with the AggreFact run).
+- Docker: `python:3.11-slim-bookworm`, CPU-only torch 2.14.1, non-root uid 10001, HEALTHCHECK on /health, model
+  pulled from the Hub at startup (not baked in). `docker build --target test .` runs the whole suite inside.
+- Tests: API tests use `hd.tiny_model` (random 2-layer ModernBERT, word-level tokenizer) so nothing downloads; they
+  skip on the Mac (no torch by design) and run in CI. `tests/test_detector.py` keeps the threshold/Platt defaults in
+  sync with `results/ft_metrics.json`.
+- CI (`.github/workflows/ci.yml`): pytest with CPU torch, plus `scripts/container_smoke.py` (build, tiny model in a
+  volume, /health, one /check). Fixed on the way: `windows()` produced nothing when overlap >= window (every
+  sentence came back as score 1.0); root-written tiny model files were 0600, unreadable by the app user.
+- Pushing workflow files needed `gh auth refresh -s workflow` (done). The GitHub repo is public.
+
+Next: run the real model locally (Colima profile `outreach` exists but is stopped; needs a read token as HF_TOKEN)
+and measure CPU latency/cost per 1,000 checks vs Gemini; reliability plot; README; Gemini comparison when the judge
+finishes (rerun `PYTHONPATH=src python3.11 -m hd.judge` on 2026-10-23 and 2026-10-24).
