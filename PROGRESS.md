@@ -11,7 +11,10 @@ error analysis, LLM-AggreFact (OOD BAcc 70.2 dev-tuned), API + Docker + CI (gree
    Then `python3.11 eval/evaluate.py --judge gemini` and commit.
 2. Local run of the real model + CPU latency/cost vs Gemini: start Colima (profile `outreach`), and either a read-only
    HF token on the Mac or make the Hub model public (user to decide).
-3. README with results tables, reliability plot and limitations (label noise, Summary weakness, per-domain thresholds).
+3. README: written 2026-10-23 (results tables, reliability plot `docs/reliability.svg` from
+   `scripts/plot_reliability.py`, API usage, reproduce steps, limitations). Fill the two "pending" spots (Gemini row,
+   CPU latency) when those numbers exist. `scripts/latency.py` is ready: start the API, then
+   `python3.11 scripts/latency.py --n 200 --note "<cpu, container limits>"` -> `results/api_latency.json`.
 4. Resume integration (plan's last section), after the CPU latency number exists (user's call, 2026-10-23).
    Draft bullets agreed in chat, every number from `results/`:
    - Fine-tuned ModernBERT-base (150M) with a custom PyTorch loop (fp16 autocast, gradient accumulation,

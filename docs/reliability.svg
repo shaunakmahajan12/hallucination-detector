@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" width="640" height="440" role="img" aria-labelledby="t d">
+<title id="t">Reliability diagram, fine-tuned detector on RAGTruth test</title>
+<desc id="d">Observed hallucination rate against mean predicted probability in ten bins. Raw scores (ECE 0.043) sit below the diagonal at high scores; Platt-calibrated scores (ECE 0.0157) track it closely.</desc>
+<style>
+.surface { fill: #fcfcfb; } .ink { fill: #0b0b0b; } .ink2 { fill: #52514e; } .muted { fill: #898781; }
+.grid { stroke: #e1e0d9; } .axis { stroke: #c3c2b7; } .diag { stroke: #898781; }
+.s1 { stroke: #2a78d6; } .s1f { fill: #2a78d6; } .s2 { stroke: #eb6834; } .s2f { fill: #eb6834; }
+.ring { stroke: #fcfcfb; }
+@media (prefers-color-scheme: dark) {
+  .surface { fill: #1a1a19; } .ink { fill: #f0efec; } .ink2 { fill: #c3c2b7; }
+  .grid { stroke: #2c2c2a; } .axis { stroke: #383835; }
+  .s1 { stroke: #3987e5; } .s1f { fill: #3987e5; } .s2 { stroke: #d95926; } .s2f { fill: #d95926; }
+  .ring { stroke: #1a1a19; }
+}
+text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+</style>
+<rect width="640" height="440" class="surface"/>
+<text x="64" y="22" class="ink" font-size="15" font-weight="600">Calibration on RAGTruth test (18,965 sentences)</text>
+<text x="64" y="39" class="ink2" font-size="12">Points above the diagonal: model under-predicts; below: over-confident</text>
+<line x1="64" x2="500" y1="384.0" y2="384.0" class="grid" stroke-width="1"/>
+<text x="56" y="388.0" class="muted" font-size="11" text-anchor="end">0.0</text>
+<text x="64.0" y="402" class="muted" font-size="11" text-anchor="middle">0.0</text>
+<line x1="64" x2="500" y1="316.8" y2="316.8" class="grid" stroke-width="1"/>
+<text x="56" y="320.8" class="muted" font-size="11" text-anchor="end">0.2</text>
+<text x="151.2" y="402" class="muted" font-size="11" text-anchor="middle">0.2</text>
+<line x1="64" x2="500" y1="249.6" y2="249.6" class="grid" stroke-width="1"/>
+<text x="56" y="253.6" class="muted" font-size="11" text-anchor="end">0.4</text>
+<text x="238.4" y="402" class="muted" font-size="11" text-anchor="middle">0.4</text>
+<line x1="64" x2="500" y1="182.4" y2="182.4" class="grid" stroke-width="1"/>
+<text x="56" y="186.4" class="muted" font-size="11" text-anchor="end">0.6</text>
+<text x="325.6" y="402" class="muted" font-size="11" text-anchor="middle">0.6</text>
+<line x1="64" x2="500" y1="115.2" y2="115.2" class="grid" stroke-width="1"/>
+<text x="56" y="119.2" class="muted" font-size="11" text-anchor="end">0.8</text>
+<text x="412.8" y="402" class="muted" font-size="11" text-anchor="middle">0.8</text>
+<line x1="64" x2="500" y1="48.0" y2="48.0" class="grid" stroke-width="1"/>
+<text x="56" y="52.0" class="muted" font-size="11" text-anchor="end">1.0</text>
+<text x="500.0" y="402" class="muted" font-size="11" text-anchor="middle">1.0</text>
+<line x1="64" x2="500" y1="384" y2="384" class="axis" stroke-width="1"/>
+<line x1="64" x2="500" y1="384" y2="48" class="diag" stroke-width="1.5" stroke-dasharray="4 4"/>
+<text x="334.3" y="155.5" class="muted" font-size="11" transform="rotate(-37.6 334.3 155.5)">perfect calibration</text>
+<text x="282.0" y="426" class="ink2" font-size="12" text-anchor="middle">Mean predicted probability (bin)</text>
+<text x="18" y="216.0" class="ink2" font-size="12" text-anchor="middle" transform="rotate(-90 18 216.0)">Observed hallucination rate</text>
+<path d="M72.7,378.2 L126.0,363.2 L170.3,348.2 L216.4,343.0 L260.3,314.9 L303.9,310.4 L348.2,281.0 L392.1,263.3 L436.8,207.2 L486.2,113.5" class="s1" fill="none" stroke-width="2" stroke-linejoin="round"/>
+<g><title>Raw score, bin 0.0-0.1: mean score 0.020, observed rate 0.017, n=14,921</title><circle cx="72.7" cy="378.2" r="12" fill="transparent"/><circle cx="72.7" cy="378.2" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.1-0.2: mean score 0.142, observed rate 0.062, n=1,085</title><circle cx="126.0" cy="363.2" r="12" fill="transparent"/><circle cx="126.0" cy="363.2" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.2-0.3: mean score 0.244, observed rate 0.106, n=507</title><circle cx="170.3" cy="348.2" r="12" fill="transparent"/><circle cx="170.3" cy="348.2" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.3-0.4: mean score 0.349, observed rate 0.122, n=328</title><circle cx="216.4" cy="343.0" r="12" fill="transparent"/><circle cx="216.4" cy="343.0" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.4-0.5: mean score 0.450, observed rate 0.206, n=248</title><circle cx="260.3" cy="314.9" r="12" fill="transparent"/><circle cx="260.3" cy="314.9" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.5-0.6: mean score 0.550, observed rate 0.219, n=210</title><circle cx="303.9" cy="310.4" r="12" fill="transparent"/><circle cx="303.9" cy="310.4" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.6-0.7: mean score 0.652, observed rate 0.306, n=235</title><circle cx="348.2" cy="281.0" r="12" fill="transparent"/><circle cx="348.2" cy="281.0" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.7-0.8: mean score 0.752, observed rate 0.359, n=220</title><circle cx="392.1" cy="263.3" r="12" fill="transparent"/><circle cx="392.1" cy="263.3" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.8-0.9: mean score 0.855, observed rate 0.526, n=287</title><circle cx="436.8" cy="207.2" r="12" fill="transparent"/><circle cx="436.8" cy="207.2" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<g><title>Raw score, bin 0.9-1.0: mean score 0.968, observed rate 0.805, n=924</title><circle cx="486.2" cy="113.5" r="12" fill="transparent"/><circle cx="486.2" cy="113.5" r="4.5" class="s1f ring" stroke-width="2"/></g>
+<path d="M74.7,377.8 L124.6,353.2 L171.0,329.3 L216.8,295.0 L258.5,264.2 L302.2,231.4 L347.0,195.6 L392.4,141.5 L436.0,109.3 L470.6,73.1" class="s2" fill="none" stroke-width="2" stroke-linejoin="round"/>
+<g><title>Platt-calibrated, bin 0.0-0.1: mean score 0.025, observed rate 0.019, n=15,471</title><circle cx="74.7" cy="377.8" r="12" fill="transparent"/><circle cx="74.7" cy="377.8" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.1-0.2: mean score 0.139, observed rate 0.092, n=1,166</title><circle cx="124.6" cy="353.2" r="12" fill="transparent"/><circle cx="124.6" cy="353.2" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.2-0.3: mean score 0.245, observed rate 0.163, n=498</title><circle cx="171.0" cy="329.3" r="12" fill="transparent"/><circle cx="171.0" cy="329.3" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.3-0.4: mean score 0.350, observed rate 0.265, n=321</title><circle cx="216.8" cy="295.0" r="12" fill="transparent"/><circle cx="216.8" cy="295.0" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.4-0.5: mean score 0.446, observed rate 0.357, n=244</title><circle cx="258.5" cy="264.2" r="12" fill="transparent"/><circle cx="258.5" cy="264.2" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.5-0.6: mean score 0.546, observed rate 0.454, n=207</title><circle cx="302.2" cy="231.4" r="12" fill="transparent"/><circle cx="302.2" cy="231.4" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.6-0.7: mean score 0.649, observed rate 0.561, n=214</title><circle cx="347.0" cy="195.6" r="12" fill="transparent"/><circle cx="347.0" cy="195.6" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.7-0.8: mean score 0.753, observed rate 0.722, n=212</title><circle cx="392.4" cy="141.5" r="12" fill="transparent"/><circle cx="392.4" cy="141.5" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.8-0.9: mean score 0.853, observed rate 0.818, n=351</title><circle cx="436.0" cy="109.3" r="12" fill="transparent"/><circle cx="436.0" cy="109.3" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<g><title>Platt-calibrated, bin 0.9-1.0: mean score 0.933, observed rate 0.925, n=281</title><circle cx="470.6" cy="73.1" r="12" fill="transparent"/><circle cx="470.6" cy="73.1" r="4.5" class="s2f ring" stroke-width="2"/></g>
+<line x1="516" x2="536" y1="64" y2="64" class="s1" stroke-width="2"/>
+<circle cx="526" cy="64" r="4.5" class="s1f ring" stroke-width="2"/>
+<text x="542" y="68" class="ink" font-size="12">Raw score</text>
+<text x="542" y="84" class="ink2" font-size="11">ECE 0.043</text>
+<line x1="516" x2="536" y1="104" y2="104" class="s2" stroke-width="2"/>
+<circle cx="526" cy="104" r="4.5" class="s2f ring" stroke-width="2"/>
+<text x="542" y="108" class="ink" font-size="12">Platt-calibrated</text>
+<text x="542" y="124" class="ink2" font-size="11">ECE 0.016</text>
+</svg>
