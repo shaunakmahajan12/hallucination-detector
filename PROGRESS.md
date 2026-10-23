@@ -12,7 +12,18 @@ error analysis, LLM-AggreFact (OOD BAcc 70.2 dev-tuned), API + Docker + CI (gree
 2. Local run of the real model + CPU latency/cost vs Gemini: start Colima (profile `outreach`), and either a read-only
    HF token on the Mac or make the Hub model public (user to decide).
 3. README with results tables, reliability plot and limitations (label noise, Summary weakness, per-domain thresholds).
-4. Resume integration (plan's last section), only after the numbers above exist.
+4. Resume integration (plan's last section), after the CPU latency number exists (user's call, 2026-10-23).
+   Draft bullets agreed in chat, every number from `results/`:
+   - Fine-tuned ModernBERT-base (150M) with a custom PyTorch loop (fp16 autocast, gradient accumulation,
+     class-weighted loss, token-budget batching) on 100K RAGTruth sentence pairs to flag unsupported claims in RAG
+     answers; test F1 0.65 / AUROC 0.92 vs 0.20 / 0.64 for a zero-shot NLI baseline.
+   - Evaluated out of domain on LLM-AggreFact (11 datasets, 29K claims): 71.5 balanced accuracy vs 75.0-75.6 for
+     0.4-0.8B specialist checkers; Platt-calibrated outputs (ECE 0.043 -> 0.016); error analysis traced weak spots
+     to summarization and label noise.
+   - Served per-sentence calibrated scores via FastAPI `/check` in a non-root CPU Docker image, with GitHub Actions
+     CI (unit tests + container smoke test on a tiny random-weight model). Add the CPU latency / cost-vs-Gemini figure.
+   Leaderboard comparison is loose (protocol unstated); keep the "half of false alarms are unannotated" point out
+   (20-example sample).
 
 ## Rules for this machine (M2, 8 GB RAM, ~15 GB free disk)
 - The Mac only holds code and small data (raw + processed RAGTruth come to ~80 MB, both gitignored).
