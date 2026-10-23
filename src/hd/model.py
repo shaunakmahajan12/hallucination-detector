@@ -41,6 +41,7 @@ class PairEncoder:
 def windows(doc_ids: list[int], room: int, overlap: int) -> list[list[int]]:
     if len(doc_ids) <= room:
         return [doc_ids]
+    overlap = min(overlap, room // 2)  # an overlap as wide as the window would leave no step at all
     step = room - overlap
     return [doc_ids[i : i + room] for i in range(0, len(doc_ids) - overlap, step)]
 

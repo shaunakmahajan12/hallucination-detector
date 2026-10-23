@@ -30,7 +30,9 @@ def main() -> None:
     try:
         docker("run", "--rm", "--user", "root", "-v", f"{VOLUME}:/model", IMAGE, "python", "-m", "hd.tiny_model",
                "/model")
-        container = docker("run", "--detach", "--rm", "--read-only", "--tmpfs", "/tmp", "--publish", "127.0.0.1::8000",
+        # read-only root, so the Hugging Face cache gets a writable tmpfs owned by the app user
+        container = docker("run", "--detach", "--read-only", "--tmpfs", "/tmp",
+                           "--tmpfs", "/home/app/.cache:uid=10001,gid=10001", "--publish", "127.0.0.1::8000",
                            "-v", f"{VOLUME}:/model:ro", "--env", "HD_MODEL=/model", IMAGE)
         base = f"http://127.0.0.1:{docker('port', container, '8000/tcp').rsplit(':', 1)[1]}"
 
@@ -41,9 +43,11 @@ def main() -> None:
                     assert json.load(r)["status"] == "ok"
                 break
             except (urllib.error.URLError, ConnectionError, TimeoutError):
-                if time.monotonic() >= deadline:
-                    print(docker("logs", container))
-                    raise RuntimeError("container did not become healthy within 120 seconds") from None
+                running = docker("inspect", "-f", "{{.State.Running}}", container) == "true"
+                if not running or time.monotonic() >= deadline:
+                    subprocess.run(["docker", "logs", container], check=False)
+                    raise RuntimeError("container exited" if not running else "container not healthy in 120 s") \
+                        from None
                 time.sleep(1)
 
         payload = {"sources": ["the cat sat on the mat"], "answer": "The cat sat. It was on the mat."}
@@ -54,8 +58,8 @@ def main() -> None:
         assert [s["text"] for s in body["sentences"]] == ["The cat sat.", "It was on the mat."], body
         print("PASS: build, startup, /health, /check")
     finally:
-        if container:
-            subprocess.run(["docker", "stop", container], check=False, capture_output=True)
+        if container:  # no --rm on the run, so a crashed container's logs survive until here
+            subprocess.run(["docker", "rm", "-f", container], check=False, capture_output=True)
         subprocess.run(["docker", "volume", "rm", VOLUME], check=False, capture_output=True)
 
 

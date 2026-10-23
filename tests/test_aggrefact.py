@@ -17,6 +17,11 @@ def test_windows_overlap_and_cover_the_document():
     assert windows(doc, room=200, overlap=10) == [doc]
 
 
+def test_windows_survive_an_overlap_wider_than_the_window():
+    w = windows(list(range(100)), room=20, overlap=50)
+    assert w and all(len(x) <= 20 for x in w) and w[-1][-1] == 99
+
+
 def test_build_tracks_which_row_each_window_belongs_to():
     seqs, owner = build([[10], [11, 12]], [list(range(100, 130)), [200]], max_len=16, overlap=4, cls_id=CLS,
                         sep_id=SEP)
