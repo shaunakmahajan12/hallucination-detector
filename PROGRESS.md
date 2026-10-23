@@ -3,6 +3,17 @@
 Plan: `~/.claude/plans/scope-the-new-hallucination-temporal-peacock.md`.
 Restarted 2026-10-21 after the first version was deleted. It used too much disk and RAM on the 8 GB Mac.
 
+## Resume here (paused 2026-10-23)
+Done: data, NLI baseline, fine-tuned ModernBERT run 1 (test F1 0.652 / AUROC 0.916, on the Hub), calibration,
+error analysis, LLM-AggreFact (OOD BAcc 70.2 dev-tuned), API + Docker + CI (green). Open, in order:
+1. Gemini judge: 494/1000 in `results/gemini_test.jsonl` (uncommitted until complete). Rerun
+   `PYTHONPATH=src python3.11 -m hd.judge` after the daily quota resets (~3 a.m. Eastern); it needs two more days.
+   Then `python3.11 eval/evaluate.py --judge gemini` and commit.
+2. Local run of the real model + CPU latency/cost vs Gemini: start Colima (profile `outreach`), and either a read-only
+   HF token on the Mac or make the Hub model public (user to decide).
+3. README with results tables, reliability plot and limitations (label noise, Summary weakness, per-domain thresholds).
+4. Resume integration (plan's last section), only after the numbers above exist.
+
 ## Rules for this machine (M2, 8 GB RAM, ~15 GB free disk)
 - The Mac only holds code and small data (raw + processed RAGTruth come to ~80 MB, both gitignored).
 - Training, the NLI baseline and evaluation run on Kaggle (free T4). Nothing is downloaded into `~/.cache/huggingface` locally.
