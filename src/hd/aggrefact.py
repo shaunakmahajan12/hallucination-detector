@@ -68,8 +68,12 @@ def main() -> None:
         docs = tok(list(ds["doc"]), add_special_tokens=False)["input_ids"]
         seqs, owner = build(claims, docs, args.max_len, args.overlap, tok.cls_token_id, tok.sep_token_id)
         probs = [0.0] * len(seqs)
+        batches = make_batches([len(s) for s in seqs], args.token_budget, args.max_batch)
+        print(f"{split}: {len(ds)} claims -> {len(seqs)} windows in {len(batches)} batches", flush=True)
         with torch.inference_mode():
-            for idx in make_batches([len(s) for s in seqs], args.token_budget, args.max_batch):
+            for b, idx in enumerate(batches, 1):
+                if b % 200 == 0:  # batches run shortest first, so later ones are slower
+                    print(f"  batch {b}/{len(batches)}, {time.perf_counter() - start:.0f}s", flush=True)
                 ids, mask = collate([seqs[i] for i in idx], tok.pad_token_id)
                 with torch.autocast("cuda", dtype=torch.float16):
                     logits = model(input_ids=ids.cuda(), attention_mask=mask.cuda()).logits.squeeze(-1)
