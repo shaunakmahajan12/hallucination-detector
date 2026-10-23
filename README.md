@@ -101,11 +101,17 @@ docker run -p 8000:8000 -v hd-hf-cache:/home/app/.cache/huggingface \
   hallucination-detector
 # the first start downloads the model (~600 MB) into the volume; /health answers once it's loaded
 
-curl -s localhost:8000/check -H 'Content-Type: application/json' -d '{
-  "sources": ["The Eiffel Tower is 330 metres tall and was completed in 1889."],
-  "answer": "The Eiffel Tower was completed in 1889. It is the tallest building in Europe."
-}'
+curl -s localhost:8000/check -H 'Content-Type: application/json' -d @examples/rag_qa.json
 ```
+
+[`examples/rag_qa.json`](examples/rag_qa.json) is a RAGTruth test response (id 16121): a question, three retrieved
+passages and a Llama-2 answer, which the model never saw in training. The API's verdicts match the human labels:
+
+| Answer sentence | score | flagged |
+|---|---|---|
+| To quickly get rid of mice, take immediate action and seal all entry points, including pipes and vents, using steel wool pads to prevent mice from getting back in. | 0.021 | no |
+| Eliminate sources of food and shelter, and consider using humane mouse traps or natural deterrents like peppermint oil to encourage mice to leave. | 0.977 | yes |
+| Prevent their return by keeping your home clean and well-maintained. | 0.938 | yes |
 
 The response has one entry per answer sentence: `text`, `start`/`end` character offsets, the raw `score`, the
 calibrated `probability` that the sentence is unsupported, and `hallucinated` (the score at or above the
@@ -145,5 +151,8 @@ plus a container smoke test ([`scripts/container_smoke.py`](scripts/container_sm
   a small sample, not a corrected number.
 - **Sentence-level labels inherit span annotations.** Some QA annotations cover a whole response, so innocent
   sentences inside it count as hallucinated and can't be learned from the sentence alone.
+- **Very short sources are out of distribution.** Training sources run about 320 words at the median. Given a
+  one-sentence source, the model can flag a sentence that repeats it word for word (score 0.97 in a toy check), so
+  give it the retrieved passages as they are, not a hand-written one-liner.
 - English only, trained on RAGTruth's domains (news summaries, MS MARCO-style QA, Yelp business data).
 - LLM-AggreFact is used for evaluation only, as its license requires.
