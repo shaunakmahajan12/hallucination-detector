@@ -1,0 +1,12 @@
+dataset,domain,claims,unsupported,auroc,bacc_dev_threshold,bacc_ragtruth_threshold,dev_threshold
+AggreFact-CNN,Out-of-domain,558,57,0.5924,0.5725,0.5311,0.075995
+AggreFact-XSum,Out-of-domain,558,273,0.7762,0.6912,0.7022,0.498058
+ClaimVerify,Out-of-domain,1088,299,0.7941,0.7371,0.6356,0.026964
+ExpertQA,Out-of-domain,3702,731,0.61,0.5903,0.5664,0.375706
+FactCheck-GPT,Out-of-domain,1566,1190,0.8071,0.7186,0.7168,0.902952
+Lfqa,Out-of-domain,1911,790,0.9192,0.8413,0.7465,0.132066
+RAGTruth,In-domain (RAGTruth),16371,1269,0.9207,0.8464,0.8032,0.214856
+Reveal,Out-of-domain,1710,1310,0.8511,0.7817,0.769,0.8586
+TofuEval-MediaS,Out-of-domain,726,172,0.7131,0.6249,0.6021,0.016593
+TofuEval-MeetB,Out-of-domain,772,150,0.765,0.6823,0.5959,0.015073
+Wice,Out-of-domain,358,247,0.844,0.775,0.7465,0.47894

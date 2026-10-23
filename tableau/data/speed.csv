@@ -1,0 +1,5 @@
+method,setting,ms_per_sentence,sentences_measured,note,label
+Fine-tuned ModernBERT,"Docker API, 4 CPU cores (Apple M2)",1201.1,1461,"one request at a time, fp32","Fine-tuned, Docker API on 4 CPU cores"
+Fine-tuned ModernBERT,"Batch scoring, Tesla T4 GPU",25.41,29320,LLM-AggreFact test claims,"Fine-tuned, Tesla T4 GPU (batch)"
+NLI baseline (DeBERTa-v3),"Batch scoring, Tesla T4 GPU",30.84,18965,RAGTruth test,"NLI baseline, Tesla T4 GPU (batch)"
+Gemini 3.5 Flash-Lite judge,"API call, free tier",800.0,987,"median per call, includes rate limiting, 987 of a planned 1,000 (free-tier quota)","Gemini Flash-Lite judge, API (median)"

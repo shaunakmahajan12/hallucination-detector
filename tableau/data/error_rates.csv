@@ -1,0 +1,34 @@
+rate,dimension,slice,sentences,value
+Recall (hallucinations flagged),task,Data2txt,936,0.753
+Recall (hallucinations flagged),task,QA,367,0.602
+Recall (hallucinations flagged),task,Summary,258,0.349
+Recall (hallucinations flagged),label_type,Evident Baseless Info,847,0.665
+Recall (hallucinations flagged),label_type,Evident Conflict,574,0.664
+Recall (hallucinations flagged),label_type,Subtle Baseless Info,164,0.628
+Recall (hallucinations flagged),label_type,Subtle Conflict,15,0.267
+Recall (hallucinations flagged),span_chars_inside,1-2,10,0.3
+Recall (hallucinations flagged),span_chars_inside,10-29,474,0.715
+Recall (hallucinations flagged),span_chars_inside,100+,238,0.601
+Recall (hallucinations flagged),span_chars_inside,3-9,106,0.887
+Recall (hallucinations flagged),span_chars_inside,30-99,733,0.596
+Recall (hallucinations flagged),implicit_true,false,1452,0.658
+Recall (hallucinations flagged),implicit_true,true,109,0.56
+Recall (hallucinations flagged),due_to_null,false,1390,0.617
+Recall (hallucinations flagged),due_to_null,true,171,0.924
+Recall (hallucinations flagged),sentence_words,0-7,50,0.48
+Recall (hallucinations flagged),sentence_words,16-31,936,0.628
+Recall (hallucinations flagged),sentence_words,32-63,55,0.509
+Recall (hallucinations flagged),sentence_words,8-15,520,0.723
+Recall (hallucinations flagged),position,0-0,60,0.433
+Recall (hallucinations flagged),position,1-2,389,0.591
+Recall (hallucinations flagged),position,10+,117,0.581
+Recall (hallucinations flagged),position,3-5,700,0.71
+Recall (hallucinations flagged),position,6-9,295,0.661
+False-alarm rate,task,Data2txt,7293,0.044
+False-alarm rate,task,QA,5368,0.03
+False-alarm rate,task,Summary,4743,0.012
+False-alarm rate,sentence_words,0-7,1198,0.009
+False-alarm rate,sentence_words,16-31,9645,0.036
+False-alarm rate,sentence_words,32-63,846,0.024
+False-alarm rate,sentence_words,64+,4,0.0
+False-alarm rate,sentence_words,8-15,5711,0.028
