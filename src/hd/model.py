@@ -38,6 +38,26 @@ class PairEncoder:
         return seqs, cut / max(len(rows), 1)
 
 
+def windows(doc_ids: list[int], room: int, overlap: int) -> list[list[int]]:
+    if len(doc_ids) <= room:
+        return [doc_ids]
+    step = room - overlap
+    return [doc_ids[i : i + room] for i in range(0, len(doc_ids) - overlap, step)]
+
+
+def build(claim_ids: list[list[int]], doc_ids: list[list[int]], max_len: int, overlap: int, cls_id: int,
+          sep_id: int) -> tuple[list[list[int]], list[int]]:
+    """Packed sequences for every (claim, document window) pair, and the row each sequence belongs to. A claim is
+    supported if any window supports it, so callers take the minimum score over a row's windows."""
+    seqs, owner = [], []
+    for row, (c, d) in enumerate(zip(claim_ids, doc_ids)):
+        c = c[: max_len // 2]
+        for w in windows(d, max_len - len(c) - 3, overlap):
+            seqs.append(pack(c, w, max_len, cls_id, sep_id))
+            owner.append(row)
+    return seqs, owner
+
+
 def make_batches(lengths: list[int], token_budget: int, max_batch: int, shuffle: bool = False,
                  seed: int = 0) -> list[list[int]]:
     """Group example indices so each padded batch (size * longest) stays within token_budget.

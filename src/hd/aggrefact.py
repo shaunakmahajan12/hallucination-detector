@@ -14,28 +14,9 @@ import os
 import time
 from pathlib import Path
 
-from hd.model import collate, load_model, make_batches, pack
+from hd.model import build, collate, load_model, make_batches
 
 DATASET = "lytang/LLM-AggreFact"
-
-
-def windows(doc_ids: list[int], room: int, overlap: int) -> list[list[int]]:
-    if len(doc_ids) <= room:
-        return [doc_ids]
-    step = room - overlap
-    return [doc_ids[i : i + room] for i in range(0, len(doc_ids) - overlap, step)]
-
-
-def build(claim_ids: list[list[int]], doc_ids: list[list[int]], max_len: int, overlap: int, cls_id: int,
-          sep_id: int) -> tuple[list[list[int]], list[int]]:
-    """Packed sequences for every (claim, document window) pair, and the row each sequence belongs to."""
-    seqs, owner = [], []
-    for row, (c, d) in enumerate(zip(claim_ids, doc_ids)):
-        c = c[: max_len // 2]
-        for w in windows(d, max_len - len(c) - 3, overlap):
-            seqs.append(pack(c, w, max_len, cls_id, sep_id))
-            owner.append(row)
-    return seqs, owner
 
 
 def main() -> None:

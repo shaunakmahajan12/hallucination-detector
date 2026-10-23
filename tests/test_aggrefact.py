@@ -2,7 +2,7 @@ import json
 import sys
 from pathlib import Path
 
-from hd.aggrefact import build, windows
+from hd.model import build, windows
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "eval"))
 from evaluate import aggrefact_report  # noqa: E402

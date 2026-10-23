@@ -1,0 +1,5 @@
+# Runtime for the API. torch comes from the CPU-only index (see Dockerfile and CI), which keeps the image small.
+transformers==5.20.2
+fastapi==0.161.1
+uvicorn==0.54.0
+pydantic-settings==2.16.1
