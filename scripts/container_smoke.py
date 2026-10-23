@@ -28,8 +28,9 @@ def main() -> None:
     docker("volume", "create", VOLUME)
     container = None
     try:
-        docker("run", "--rm", "--user", "root", "-v", f"{VOLUME}:/model", IMAGE, "python", "-m", "hd.tiny_model",
-               "/model")
+        # written as root, and safetensors files come out 0600, so open them up for the non-root app user
+        docker("run", "--rm", "--user", "root", "-v", f"{VOLUME}:/model", IMAGE, "sh", "-c",
+               "python -m hd.tiny_model /model && chmod -R a+rX /model")
         print(docker("run", "--rm", "-v", f"{VOLUME}:/model:ro", IMAGE, "ls", "-la", "/model"))
         container = docker("run", "--detach", "--publish", "127.0.0.1::8000", "-v", f"{VOLUME}:/model:ro",
                            "--env", "HD_MODEL=/model", IMAGE)
