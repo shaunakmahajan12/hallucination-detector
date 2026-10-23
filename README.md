@@ -67,8 +67,14 @@ The API returns the calibrated probability next to the raw score.
 ### Speed
 
 On a Kaggle T4 GPU: 21.6 ms per sentence for the fine-tuned model, against 30.8 ms for the NLI baseline, which has to
-score ~2.2 source windows per sentence. *CPU latency of the Docker API and cost per 1,000 checks against the LLM judge:
-pending* ([`scripts/latency.py`](scripts/latency.py) is ready).
+score ~2.2 source windows per sentence.
+
+The Docker API on CPU ([`results/api_latency.json`](results/api_latency.json), 200 test responses sent one at a time,
+fp32, 4 vCPU of an 8 GB M2 Mac through Colima) takes 1.2 s per sentence: 5.8 s per response at the median and 23.5 s
+at p95, longest for Data2txt with its long JSON sources. That is slower than the Gemini 3.5 Flash-Lite judge (median 0.81 s
+per call), so CPU serving suits offline or batch checks; a GPU is the option for interactive use. The judge costs about
+$0.25 per 1,000 checks at paid-tier prices (~750 input and ~12 output tokens per call), where the detector has no
+per-call cost.
 
 ## How it works
 
@@ -91,8 +97,8 @@ pending* ([`scripts/latency.py`](scripts/latency.py) is ready).
 
 ```bash
 docker build -t hallucination-detector .
-docker run -p 8000:8000 -e HF_TOKEN=<token with access to the model> \
-  -v hd-hf-cache:/home/app/.cache/huggingface hallucination-detector
+docker run -p 8000:8000 -v hd-hf-cache:/home/app/.cache/huggingface \
+  hallucination-detector
 # the first start downloads the model (~600 MB) into the volume; /health answers once it's loaded
 
 curl -s localhost:8000/check -H 'Content-Type: application/json' -d '{
@@ -105,8 +111,8 @@ The response has one entry per answer sentence: `text`, `start`/`end` character 
 calibrated `probability` that the sentence is unsupported, and `hallucinated` (the score at or above the
 validation-tuned threshold). It also returns a count of flagged sentences and `latency_ms`. An optional `question`
 field mirrors RAGTruth's QA format. Several `sources` are formatted as `passage 1:`, `passage 2:` and so on.
-Configuration is through `HD_*` environment variables ([`api/settings.py`](api/settings.py)). The model is
-currently a private Hub repo, so `HF_TOKEN` must have read access.
+Configuration is through `HD_*` environment variables ([`api/settings.py`](api/settings.py)). The model is a
+public Hub repo ([`shaunak-12/hallucination-detector-modernbert`](https://huggingface.co/shaunak-12/hallucination-detector-modernbert)), so no token is needed.
 
 ## Reproduce
 

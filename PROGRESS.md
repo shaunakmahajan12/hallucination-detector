@@ -3,18 +3,19 @@
 Plan: `~/.claude/plans/scope-the-new-hallucination-temporal-peacock.md`.
 Restarted 2026-10-21 after the first version was deleted. It used too much disk and RAM on the 8 GB Mac.
 
-## Resume here (paused 2026-10-23)
+## Resume here (paused 2026-10-23, afternoon)
 Done: data, NLI baseline, fine-tuned ModernBERT run 1 (test F1 0.652 / AUROC 0.916, on the Hub), calibration,
 error analysis, LLM-AggreFact (OOD BAcc 70.2 dev-tuned), API + Docker + CI (green). Open, in order:
-1. Gemini judge: 494/1000 in `results/gemini_test.jsonl` (uncommitted until complete). Rerun
-   `PYTHONPATH=src python3.11 -m hd.judge` after the daily quota resets (~3 a.m. Eastern); it needs two more days.
-   Then `python3.11 eval/evaluate.py --judge gemini` and commit.
-2. Local run of the real model + CPU latency/cost vs Gemini: start Colima (profile `outreach`), and either a read-only
-   HF token on the Mac or make the Hub model public (user to decide).
-3. README: written 2026-10-23 (results tables, reliability plot `docs/reliability.svg` from
-   `scripts/plot_reliability.py`, API usage, reproduce steps, limitations). Fill the two "pending" spots (Gemini row,
-   CPU latency) when those numbers exist. `scripts/latency.py` is ready: start the API, then
-   `python3.11 scripts/latency.py --n 200 --note "<cpu, container limits>"` -> `results/api_latency.json`.
+1. Gemini judge: ~994/1000 after the 2026-10-23 run (stops on the free daily quota). On 2026-10-24 after ~3 a.m.
+   Eastern: `PYTHONPATH=src python3.11 -m hd.judge` (last 6), then `python3.11 eval/evaluate.py --judge gemini`, fill
+   the README Gemini row (line 19), commit `results/gemini_test.jsonl`. No extra keys or accounts for quota (user agreed).
+2. CPU latency done 2026-10-23 (`results/api_latency.json`): model made public on the Hub (no token needed), API on the
+   real model in Colima `outreach` (--cpus 4 --memory 4g). 1.2 s/sentence, 5.8 s median / 23.5 s p95 per response.
+   Slower than Gemini (median 0.81 s/call, ~$0.25 per 1,000 checks paid tier, 870 rows), so CPU is batch-only.
+   API parity checked: container scores match Kaggle's `ft_test.jsonl` within 0.0015 on 40 sentences.
+   README example (Eiffel, one-line source) wrongly flags the supported sentence (0.97): model weak on very short
+   sources. Replace the example and add a limitation (user to decide).
+3. README: latency paragraph written 2026-10-23; only the Gemini row is pending.
 4. Resume integration. 2026-10-23: project added to the resume-pipeline MASTER inventory only
    (`~/Documents/Personal/New Resume/resume-tailoring/resume-pipeline/resume/master/sections/projects.tex`, uncommitted
    there), with a PENDING note for latency. Still to do there: add latency to bullet 3, update CLAUDE.md's

@@ -1,5 +1,5 @@
 # CPU-only image for the API. The model is not baked in: it downloads from the Hugging Face Hub at startup
-# (set HF_TOKEN for the private repo; mount a volume on the cache to keep it across restarts).
+# (public repo, no token needed; mount a volume on the cache to keep it across restarts).
 FROM python:3.11-slim-bookworm AS base
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/app:/app/src
 WORKDIR /app

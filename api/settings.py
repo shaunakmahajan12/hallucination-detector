@@ -1,4 +1,4 @@
-"""All API configuration, from HD_* environment variables (HF_TOKEN for the private Hub model)."""
+"""All API configuration, from HD_* environment variables (HF_TOKEN only for a private Hub model)."""
 
 from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
