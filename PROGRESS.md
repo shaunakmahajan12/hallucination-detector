@@ -118,5 +118,14 @@ write-up in `results/ft_error_analysis.md`):
 - Decision: run 2 (more epochs / heavier class weight) parked; if Summary matters later, try ModernBERT-large or adding
   the previous sentence as context. Hours arithmetic and citation checks fit a rule layer in the product.
 
-Still to do: LLM-AggreFact out-of-domain eval (Kaggle), CPU latency/cost vs Gemini, reliability plot for the README,
+LLM-AggreFact (code ready, not run): `src/hd/aggrefact.py` scores dev + test (~60k claims) with the Hub model;
+documents longer than 2,048 tokens become overlapping windows (256-token overlap), score = min over windows. Gated
+dataset, evaluation-only licence. `notebooks/aggrefact_kaggle.ipynb` (GPU, HF_TOKEN secret). Then locally
+`python3.11 eval/evaluate.py --aggrefact`: balanced accuracy per dataset with (a) the RAGTruth val threshold unchanged
+(strict OOD) and (b) a per-dataset threshold tuned on AggreFact dev; averages over the 10 non-RAGTruth datasets
+(out of domain) and all 11 (leaderboard-comparable). Leaderboard reference points: FactCG-DeBERTa-L (0.4B) 75.6,
+MiniCheck-Flan-T5-L 75.0, Bespoke-MiniCheck-7B 77.4 (llm-aggrefact.github.io, checked 2026-10-22; its threshold
+protocol isn't stated there).
+
+Still to do: CPU latency/cost vs Gemini, reliability plot for the README,
 Gemini comparison once the judge finishes.

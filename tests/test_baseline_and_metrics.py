@@ -2,7 +2,8 @@ import math
 
 from hd.baselines import score_rows
 from hd.data import chunk_words
-from hd.metrics import auroc, best_threshold, calibration, platt_apply, platt_fit, prf, report
+from hd.metrics import (auroc, balanced_accuracy, best_bacc_threshold, best_threshold, calibration, platt_apply,
+                        platt_fit, prf, report)
 
 
 def test_chunk_words_short_text_is_one_chunk():
@@ -64,3 +65,15 @@ def test_platt_fixes_scale_and_keeps_order():
     assert calibration(labels, fixed)["ece"] < calibration(labels, squashed)["ece"] / 3
     order = sorted(range(len(fixed)), key=lambda i: squashed[i])
     assert all(fixed[i] <= fixed[j] for i, j in zip(order, order[1:]))
+
+
+def test_balanced_accuracy_ignores_class_balance():
+    labels = [1] + [0] * 99
+    assert balanced_accuracy(labels, [0] * 100) == 0.5  # all-negative scores 99% accuracy but 0.5 balanced
+    assert balanced_accuracy(labels, [1] + [0] * 99) == 1.0
+
+
+def test_best_bacc_threshold():
+    labels, scores = [0, 0, 0, 1], [0.1, 0.2, 0.7, 0.8]
+    t = best_bacc_threshold(labels, scores)
+    assert t == 0.8 and balanced_accuracy(labels, [int(s >= t) for s in scores]) == 1.0

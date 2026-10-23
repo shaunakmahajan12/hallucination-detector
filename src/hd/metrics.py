@@ -131,3 +131,30 @@ def platt_fit(labels: list[int], scores: list[float], iters: int = 100) -> tuple
 
 def platt_apply(scores: list[float], a: float, b: float) -> list[float]:
     return [_sigmoid(a * _logit(s) + b) for s in scores]
+
+
+def balanced_accuracy(labels: list[int], preds: list[int]) -> float:
+    """Mean of recall on each class: LLM-AggreFact's metric, robust to the very different class balance per dataset."""
+    pos = [p for y, p in zip(labels, preds) if y]
+    neg = [p for y, p in zip(labels, preds) if not y]
+    if not pos or not neg:
+        return float("nan")
+    return (sum(pos) / len(pos) + sum(1 - p for p in neg) / len(neg)) / 2
+
+
+def best_bacc_threshold(labels: list[int], scores: list[float]) -> float:
+    """Threshold t maximizing balanced accuracy when predicting 1 for score >= t."""
+    pairs = sorted(zip(scores, labels), reverse=True)
+    n_pos = sum(labels)
+    n_neg = len(labels) - n_pos
+    tp = fp = 0
+    best, best_t = -1.0, 1.0
+    for i, (s, y) in enumerate(pairs):
+        tp += y
+        fp += 1 - y
+        if i + 1 < len(pairs) and pairs[i + 1][0] == s:
+            continue
+        bacc = (tp / n_pos + (n_neg - fp) / n_neg) / 2 if n_pos and n_neg else 0.0
+        if bacc > best:
+            best, best_t = bacc, s
+    return best_t

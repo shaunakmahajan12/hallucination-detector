@@ -80,10 +80,11 @@ def collate(seqs: list[list[int]], pad_id: int):
     return ids, mask
 
 
-def load_model(name: str = MODEL_NAME):
+def load_model(name: str = MODEL_NAME, token: str | None = None):
     from transformers import AutoConfig, AutoModelForSequenceClassification
 
-    config = AutoConfig.from_pretrained(name, num_labels=1)
+    config = AutoConfig.from_pretrained(name, num_labels=1, token=token)
     if hasattr(config, "reference_compile"):  # ModernBERT would torch.compile and recompile for every batch shape
         config.reference_compile = False
-    return AutoModelForSequenceClassification.from_pretrained(name, config=config, attn_implementation="sdpa")
+    return AutoModelForSequenceClassification.from_pretrained(name, config=config, attn_implementation="sdpa",
+                                                              token=token)
