@@ -2,7 +2,7 @@ import math
 
 from hd.baselines import score_rows
 from hd.data import chunk_words
-from hd.metrics import auroc, best_threshold, prf, report
+from hd.metrics import auroc, best_threshold, calibration, platt_apply, platt_fit, prf, report
 
 
 def test_chunk_words_short_text_is_one_chunk():
@@ -44,3 +44,23 @@ def test_best_threshold_separates_classes():
     t = best_threshold(labels, scores)
     assert t == 0.6
     assert report(labels, scores, t)["f1"] == 1.0
+
+
+def test_calibration_perfect_and_overconfident():
+    labels = [0] * 5 + [1] * 5
+    assert calibration(labels, [0.05] * 5 + [0.95] * 5)["ece"] == 0.05
+    assert calibration([0, 0, 0, 1], [0.95] * 4)["ece"] == 0.7
+
+
+def test_platt_fixes_scale_and_keeps_order():
+    import random
+
+    rng = random.Random(0)
+    true_p = [rng.random() for _ in range(4000)]
+    labels = [int(rng.random() < p) for p in true_p]
+    squashed = [p**0.25 for p in true_p]  # overconfident toward 1
+    a, b = platt_fit(labels, squashed)
+    fixed = platt_apply(squashed, a, b)
+    assert calibration(labels, fixed)["ece"] < calibration(labels, squashed)["ece"] / 3
+    order = sorted(range(len(fixed)), key=lambda i: squashed[i])
+    assert all(fixed[i] <= fixed[j] for i, j in zip(order, order[1:]))

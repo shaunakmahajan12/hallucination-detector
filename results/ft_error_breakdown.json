@@ -1,0 +1,154 @@
+{
+  "method": "ft",
+  "threshold": 0.650467,
+  "recall_by_task": {
+    "Data2txt": {
+      "n": 936,
+      "flagged": 0.753
+    },
+    "QA": {
+      "n": 367,
+      "flagged": 0.602
+    },
+    "Summary": {
+      "n": 258,
+      "flagged": 0.349
+    }
+  },
+  "recall_by_label_type": {
+    "Evident Baseless Info": {
+      "n": 847,
+      "flagged": 0.665
+    },
+    "Evident Conflict": {
+      "n": 574,
+      "flagged": 0.664
+    },
+    "Subtle Baseless Info": {
+      "n": 164,
+      "flagged": 0.628
+    },
+    "Subtle Conflict": {
+      "n": 15,
+      "flagged": 0.267
+    }
+  },
+  "recall_by_span_chars_inside": {
+    "1-2": {
+      "n": 10,
+      "flagged": 0.3
+    },
+    "10-29": {
+      "n": 474,
+      "flagged": 0.715
+    },
+    "100+": {
+      "n": 238,
+      "flagged": 0.601
+    },
+    "3-9": {
+      "n": 106,
+      "flagged": 0.887
+    },
+    "30-99": {
+      "n": 733,
+      "flagged": 0.596
+    }
+  },
+  "recall_by_implicit_true": {
+    "false": {
+      "n": 1452,
+      "flagged": 0.658
+    },
+    "true": {
+      "n": 109,
+      "flagged": 0.56
+    }
+  },
+  "recall_by_due_to_null": {
+    "false": {
+      "n": 1390,
+      "flagged": 0.617
+    },
+    "true": {
+      "n": 171,
+      "flagged": 0.924
+    }
+  },
+  "recall_by_sentence_words": {
+    "0-7": {
+      "n": 50,
+      "flagged": 0.48
+    },
+    "16-31": {
+      "n": 936,
+      "flagged": 0.628
+    },
+    "32-63": {
+      "n": 55,
+      "flagged": 0.509
+    },
+    "8-15": {
+      "n": 520,
+      "flagged": 0.723
+    }
+  },
+  "recall_by_position": {
+    "0-0": {
+      "n": 60,
+      "flagged": 0.433
+    },
+    "1-2": {
+      "n": 389,
+      "flagged": 0.591
+    },
+    "10+": {
+      "n": 117,
+      "flagged": 0.581
+    },
+    "3-5": {
+      "n": 700,
+      "flagged": 0.71
+    },
+    "6-9": {
+      "n": 295,
+      "flagged": 0.661
+    }
+  },
+  "false_alarm_rate_by_task": {
+    "Data2txt": {
+      "n": 7293,
+      "flagged": 0.044
+    },
+    "QA": {
+      "n": 5368,
+      "flagged": 0.03
+    },
+    "Summary": {
+      "n": 4743,
+      "flagged": 0.012
+    }
+  },
+  "false_alarm_rate_by_sentence_words": {
+    "0-7": {
+      "n": 1198,
+      "flagged": 0.009
+    },
+    "16-31": {
+      "n": 9645,
+      "flagged": 0.036
+    },
+    "32-63": {
+      "n": 846,
+      "flagged": 0.024
+    },
+    "64+": {
+      "n": 4,
+      "flagged": 0.0
+    },
+    "8-15": {
+      "n": 5711,
+      "flagged": 0.028
+    }
+  }
+}

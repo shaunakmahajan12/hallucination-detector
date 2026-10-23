@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from hd.data import read_jsonl  # noqa: E402
 from hd.judge import PRICE_PER_M  # noqa: E402
-from hd.metrics import best_threshold, report  # noqa: E402
+from hd.metrics import best_threshold, calibration, platt_apply, platt_fit, report  # noqa: E402
 
 
 def grouped(rows: list[dict], key: str, threshold: float) -> dict:
@@ -72,6 +72,12 @@ def main() -> None:
         "test_by_task": grouped(test, "task_type", t),
         "test_by_llm": grouped(test, "model", t),
     }
+    # Calibration on test: raw scores, then Platt scaling fitted on val (monotonic, so F1/AUROC above are unchanged)
+    a, b = platt_fit([r["label"] for r in val], [r["score"] for r in val])
+    test_labels, test_scores = [r["label"] for r in test], [r["score"] for r in test]
+    metrics["calibration_test"] = {"raw": calibration(test_labels, test_scores),
+                                   "platt_from_val": {"a": round(a, 4), "b": round(b, 4),
+                                                      **calibration(test_labels, platt_apply(test_scores, a, b))}}
     (args.results / f"{args.method}_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n")
     print(json.dumps(metrics, indent=2))
 

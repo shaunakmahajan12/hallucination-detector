@@ -100,3 +100,23 @@ locally from the saved predictions and they match Kaggle's.
   background. Pass bar from the plan: val F1 must beat NLI's 0.248.
 - No torch on the Mac by design; `tests/test_model_and_train.py` covers packing, batching, LR schedule, class weights.
   Tests run with `uvx --python 3.11 pytest`.
+
+## Step 4: evaluation (in progress 2026-10-22)
+Calibration (`eval/evaluate.py` now adds `calibration_test`: ECE over 10 bins, raw and after Platt scaling fitted on
+val; Platt is monotonic so F1/AUROC don't change):
+- Fine-tuned: test ECE 0.043 raw -> 0.016 with Platt (a 0.71, b -0.90). Raw scores are overconfident at the top
+  (0.9-1.0 bin: mean score 0.97, observed rate 0.81), as expected from pos_weight ~2.8.
+- NLI: ECE 0.640 raw -> 0.030 with Platt, but only because Platt flattens it to roughly the base rate everywhere.
+  Low ECE isn't usefulness; its AUROC is still 0.64.
+
+Error analysis (`python eval/errors.py --method ft` -> `results/ft_error_breakdown.json`, `ft_errors_sample.md`;
+write-up in `results/ft_error_analysis.md`):
+- Summary's low recall is ranking, not threshold: a Summary-only threshold lifts its F1 0.446 -> 0.464 only, and its
+  misses are confident (scores 0.01-0.33). Main misses: invented plausible facts and subtle detail conflicts.
+- About half of the 20 sampled false alarms are real unsupported content that annotators didn't mark, so measured
+  precision understates the model.
+- Decision: run 2 (more epochs / heavier class weight) parked; if Summary matters later, try ModernBERT-large or adding
+  the previous sentence as context. Hours arithmetic and citation checks fit a rule layer in the product.
+
+Still to do: LLM-AggreFact out-of-domain eval (Kaggle), CPU latency/cost vs Gemini, reliability plot for the README,
+Gemini comparison once the judge finishes.
