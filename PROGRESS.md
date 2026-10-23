@@ -82,7 +82,9 @@ locally from the saved predictions and they match Kaggle's.
 - By LLM: Mistral 0.722 and Llama-2 0.62-0.69; GPT-3.5 0.368 and GPT-4 0.454, but those rest on 58 and 47
   hallucinated sentences, so they're noisy.
 - ~108 min/epoch at ~9,900 tok/s, peak GPU 8 GB, test inference 21.6 ms/sentence on the T4.
-- Checkpoint is only in that Kaggle run's output (`checkpoints/ft/`); not yet on the HF Hub.
+- Checkpoint on the HF Hub (private): `shaunak-12/hallucination-detector-modernbert`, with `results/ft_metrics.json`
+  and `ft_train_log.json`. Pushed 2026-10-22 by `notebooks/upload_hub_kaggle.ipynb` (CPU, reads the `HF_TOKEN` Kaggle
+  secret, takes the training run's output as input).
 
 - `src/hd/model.py`: input is `[CLS] sentence [SEP] source [SEP]`, capped at 2,048 tokens. The sentence goes first, so
   truncation only trims the source's tail. Each source is tokenized once. Batches are grouped by length under a padded
@@ -98,4 +100,3 @@ locally from the saved predictions and they match Kaggle's.
   background. Pass bar from the plan: val F1 must beat NLI's 0.248.
 - No torch on the Mac by design; `tests/test_model_and_train.py` covers packing, batching, LR schedule, class weights.
   Tests run with `uvx --python 3.11 pytest`.
-- Not done yet: pushing the checkpoint to the HF Hub (needs an HF token as a Kaggle secret).
