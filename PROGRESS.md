@@ -15,7 +15,10 @@ error analysis, LLM-AggreFact (OOD BAcc 70.2 dev-tuned), API + Docker + CI (gree
    `scripts/plot_reliability.py`, API usage, reproduce steps, limitations). Fill the two "pending" spots (Gemini row,
    CPU latency) when those numbers exist. `scripts/latency.py` is ready: start the API, then
    `python3.11 scripts/latency.py --n 200 --note "<cpu, container limits>"` -> `results/api_latency.json`.
-4. Resume integration (plan's last section), after the CPU latency number exists (user's call, 2026-10-23).
+4. Resume integration. 2026-10-23: project added to the resume-pipeline MASTER inventory only
+   (`~/Documents/Personal/New Resume/resume-tailoring/resume-pipeline/resume/master/sections/projects.tex`, uncommitted
+   there), with a PENDING note for latency. Still to do there: add latency to bullet 3, update CLAUDE.md's
+   "PyTorch was never used" / "never claim NLP" rules (user's call), put it in the ml_engineer/applied_ai bases, build.
    Draft bullets agreed in chat, every number from `results/`:
    - Fine-tuned ModernBERT-base (150M) with a custom PyTorch loop (fp16 autocast, gradient accumulation,
      class-weighted loss, token-budget batching) on 100K RAGTruth sentence pairs to flag unsupported claims in RAG
