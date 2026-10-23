@@ -1,0 +1,116 @@
+{
+  "ragtruth_threshold": 0.650467,
+  "average_out_of_domain": {
+    "datasets": 10,
+    "auroc": 0.7672,
+    "bacc_ragtruth_threshold": 0.6612,
+    "bacc_dev_threshold": 0.7015
+  },
+  "average_all": {
+    "datasets": 11,
+    "auroc": 0.7812,
+    "bacc_ragtruth_threshold": 0.6741,
+    "bacc_dev_threshold": 0.7147
+  },
+  "per_dataset": {
+    "AggreFact-CNN": {
+      "n": 558,
+      "unsupported": 57,
+      "auroc": 0.5924,
+      "bacc_ragtruth_threshold": 0.5311,
+      "bacc_dev_threshold": 0.5725,
+      "dev_threshold": 0.075995,
+      "multi_window_frac": 0.0072
+    },
+    "AggreFact-XSum": {
+      "n": 558,
+      "unsupported": 273,
+      "auroc": 0.7762,
+      "bacc_ragtruth_threshold": 0.7022,
+      "bacc_dev_threshold": 0.6912,
+      "dev_threshold": 0.498058,
+      "multi_window_frac": 0.0036
+    },
+    "ClaimVerify": {
+      "n": 1088,
+      "unsupported": 299,
+      "auroc": 0.7941,
+      "bacc_ragtruth_threshold": 0.6356,
+      "bacc_dev_threshold": 0.7371,
+      "dev_threshold": 0.026964,
+      "multi_window_frac": 0.3327
+    },
+    "ExpertQA": {
+      "n": 3702,
+      "unsupported": 731,
+      "auroc": 0.61,
+      "bacc_ragtruth_threshold": 0.5664,
+      "bacc_dev_threshold": 0.5903,
+      "dev_threshold": 0.375706,
+      "multi_window_frac": 0.0694
+    },
+    "FactCheck-GPT": {
+      "n": 1566,
+      "unsupported": 1190,
+      "auroc": 0.8071,
+      "bacc_ragtruth_threshold": 0.7168,
+      "bacc_dev_threshold": 0.7186,
+      "dev_threshold": 0.902952,
+      "multi_window_frac": 0.0
+    },
+    "Lfqa": {
+      "n": 1911,
+      "unsupported": 790,
+      "auroc": 0.9192,
+      "bacc_ragtruth_threshold": 0.7465,
+      "bacc_dev_threshold": 0.8413,
+      "dev_threshold": 0.132066,
+      "multi_window_frac": 0.0
+    },
+    "RAGTruth": {
+      "n": 16371,
+      "unsupported": 1269,
+      "auroc": 0.9207,
+      "bacc_ragtruth_threshold": 0.8032,
+      "bacc_dev_threshold": 0.8464,
+      "dev_threshold": 0.214856,
+      "multi_window_frac": 0.0027
+    },
+    "Reveal": {
+      "n": 1710,
+      "unsupported": 1310,
+      "auroc": 0.8511,
+      "bacc_ragtruth_threshold": 0.769,
+      "bacc_dev_threshold": 0.7817,
+      "dev_threshold": 0.8586,
+      "multi_window_frac": 0.0
+    },
+    "TofuEval-MediaS": {
+      "n": 726,
+      "unsupported": 172,
+      "auroc": 0.7131,
+      "bacc_ragtruth_threshold": 0.6021,
+      "bacc_dev_threshold": 0.6249,
+      "dev_threshold": 0.016593,
+      "multi_window_frac": 0.0
+    },
+    "TofuEval-MeetB": {
+      "n": 772,
+      "unsupported": 150,
+      "auroc": 0.765,
+      "bacc_ragtruth_threshold": 0.5959,
+      "bacc_dev_threshold": 0.6823,
+      "dev_threshold": 0.015073,
+      "multi_window_frac": 0.0
+    },
+    "Wice": {
+      "n": 358,
+      "unsupported": 247,
+      "auroc": 0.844,
+      "bacc_ragtruth_threshold": 0.7465,
+      "bacc_dev_threshold": 0.775,
+      "dev_threshold": 0.47894,
+      "multi_window_frac": 0.2821
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "model": "shaunak-12/hallucination-detector-modernbert",
+  "device": "Tesla T4",
+  "dev": {
+    "rows": 30420,
+    "sequences": 31970,
+    "seconds": 795.1,
+    "ms_per_claim": 26.14
+  },
+  "test": {
+    "rows": 29320,
+    "sequences": 30906,
+    "seconds": 745.0,
+    "ms_per_claim": 25.41
+  }
+}

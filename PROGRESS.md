@@ -118,14 +118,23 @@ write-up in `results/ft_error_analysis.md`):
 - Decision: run 2 (more epochs / heavier class weight) parked; if Summary matters later, try ModernBERT-large or adding
   the previous sentence as context. Hours arithmetic and citation checks fit a rule layer in the product.
 
-LLM-AggreFact (code ready, not run): `src/hd/aggrefact.py` scores dev + test (~60k claims) with the Hub model;
-documents longer than 2,048 tokens become overlapping windows (256-token overlap), score = min over windows. Gated
-dataset, evaluation-only licence. `notebooks/aggrefact_kaggle.ipynb` (GPU, HF_TOKEN secret). Then locally
-`python3.11 eval/evaluate.py --aggrefact`: balanced accuracy per dataset with (a) the RAGTruth val threshold unchanged
-(strict OOD) and (b) a per-dataset threshold tuned on AggreFact dev; averages over the 10 non-RAGTruth datasets
-(out of domain) and all 11 (leaderboard-comparable). Leaderboard reference points: FactCG-DeBERTa-L (0.4B) 75.6,
-MiniCheck-Flan-T5-L 75.0, Bespoke-MiniCheck-7B 77.4 (llm-aggrefact.github.io, checked 2026-10-22; its threshold
-protocol isn't stated there).
+LLM-AggreFact (run 2026-10-22, `results/aggrefact_*`): `src/hd/aggrefact.py` scored dev + test (59,740 claims,
+~26 ms/claim on a T4; 2.4% of claims needed more than one 2,048-token window, up to 21; score = min over windows). Metrics from
+`python3.11 eval/evaluate.py --aggrefact`, balanced accuracy (BAcc):
+
+| | AUROC | BAcc, RAGTruth threshold (strict) | BAcc, threshold tuned per dataset on AggreFact dev |
+|---|---|---|---|
+| 10 out-of-domain datasets | 0.767 | 66.1 | 70.2 |
+| all 11 (incl. RAGTruth) | 0.781 | 67.4 | 71.5 |
+| RAGTruth subset alone | 0.921 | 80.3 | 84.6 |
+
+- Leaderboard (llm-aggrefact.github.io, all 11): FactCG-DeBERTa-L (0.4B) 75.6, MiniCheck-Flan-T5-L (0.8B) 75.0,
+  Bespoke-MiniCheck-7B 77.4. Ours at 0.15B: 71.5 with dev-tuned thresholds. Its threshold protocol isn't stated, so
+  compare loosely. Per dataset vs FactCG: ahead on RAGTruth (84.6 vs 82.3) and WiCE (77.5 vs 74.2), level on
+  FactCheck-GPT and ExpertQA, behind on AggreFact-CNN (57 vs 70), REVEAL (78 vs 88) and the TofuEval sets.
+- Best dev thresholds range from 0.015 to 0.90 across datasets, so the scores don't transfer across domains on one
+  threshold: a product needs per-domain calibration, or training data beyond RAGTruth.
+- Weakest: AggreFact-CNN (AUROC 0.59) and ExpertQA (0.61; every leaderboard model is near 59 there).
 
 Still to do: CPU latency/cost vs Gemini, reliability plot for the README,
 Gemini comparison once the judge finishes.
