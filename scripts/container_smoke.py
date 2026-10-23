@@ -30,10 +30,9 @@ def main() -> None:
     try:
         docker("run", "--rm", "--user", "root", "-v", f"{VOLUME}:/model", IMAGE, "python", "-m", "hd.tiny_model",
                "/model")
-        # read-only root, so the Hugging Face cache gets a writable tmpfs owned by the app user
-        container = docker("run", "--detach", "--read-only", "--tmpfs", "/tmp",
-                           "--tmpfs", "/home/app/.cache:uid=10001,gid=10001", "--publish", "127.0.0.1::8000",
-                           "-v", f"{VOLUME}:/model:ro", "--env", "HD_MODEL=/model", IMAGE)
+        print(docker("run", "--rm", "-v", f"{VOLUME}:/model:ro", IMAGE, "ls", "-la", "/model"))
+        container = docker("run", "--detach", "--publish", "127.0.0.1::8000", "-v", f"{VOLUME}:/model:ro",
+                           "--env", "HD_MODEL=/model", IMAGE)
         base = f"http://127.0.0.1:{docker('port', container, '8000/tcp').rsplit(':', 1)[1]}"
 
         deadline = time.monotonic() + 120
