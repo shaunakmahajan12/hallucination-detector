@@ -44,7 +44,9 @@ def judge_report(name: str, results: Path) -> dict:
         method = other.name.removesuffix("_metrics.json")
         if method == name or not (results / f"{method}_test.jsonl").exists():
             continue
-        t = json.loads(other.read_text())["threshold_from_val"]
+        t = json.loads(other.read_text()).get("threshold_from_val")
+        if t is None:  # aggrefact_metrics.json is a benchmark summary, not a method on this sample
+            continue
         sub = [r for r in read_jsonl(results / f"{method}_test.jsonl") if r["id"] in ids]
         out["methods"][method] = report([r["label"] for r in sub], [r["score"] for r in sub], t)
     return out

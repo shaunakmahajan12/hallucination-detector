@@ -20,7 +20,13 @@ Built from [`tableau/`](tableau/).
 |---|---|---|---|---|
 | **Fine-tuned ModernBERT-base** | **0.652** | **0.653** | 0.651 | **0.916** |
 | Zero-shot NLI (`cross-encoder/nli-deberta-v3-base`, windowed) | 0.197 | 0.117 | 0.630 | 0.640 |
-| LLM judge (Gemini 3.5 Flash-Lite, 1,000-sentence sample) | *pending: free-tier quota, run in progress* | | | |
+| LLM judge (Gemini 3.5 Flash-Lite, 987-sentence sample) | 0.546 | 0.404 | 0.843 | 0.874* |
+
+\*The judge answers 0 or 1, so its AUROC is just balanced accuracy. On the same 987 sentences (70 hallucinated) the
+fine-tuned model scores 0.568 F1 / 0.905 AUROC and the NLI baseline 0.182 / 0.658
+([`results/gemini_metrics.json`](results/gemini_metrics.json)). With so few positives, call the judge and the
+fine-tuned model comparable on F1: the judge flags more (recall 0.843) at lower precision (0.404). The run stopped at
+987 of a planned 1,000 on the free-tier quota.
 
 The decision threshold is chosen on validation F1 and applied unchanged to test (validation F1 0.671, close to the
 test figure).

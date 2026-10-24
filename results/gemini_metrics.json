@@ -1,0 +1,65 @@
+{
+  "judge": "gemini-3.5-flash-lite",
+  "sample": 987,
+  "methods": {
+    "gemini": {
+      "precision": 0.4041,
+      "recall": 0.8429,
+      "f1": 0.5463,
+      "auroc": 0.874,
+      "n": 987,
+      "hallucinated": 70
+    },
+    "ft": {
+      "precision": 0.5176,
+      "recall": 0.6286,
+      "f1": 0.5677,
+      "auroc": 0.9053,
+      "n": 987,
+      "hallucinated": 70
+    },
+    "nli": {
+      "precision": 0.1055,
+      "recall": 0.6571,
+      "f1": 0.1818,
+      "auroc": 0.6584,
+      "n": 987,
+      "hallucinated": 70
+    }
+  },
+  "by_task": {
+    "Data2txt": {
+      "precision": 0.5152,
+      "recall": 0.85,
+      "f1": 0.6415,
+      "auroc": 0.8827,
+      "n": 418,
+      "hallucinated": 40
+    },
+    "QA": {
+      "precision": 0.2766,
+      "recall": 0.8125,
+      "f1": 0.4127,
+      "auroc": 0.8431,
+      "n": 285,
+      "hallucinated": 16
+    },
+    "Summary": {
+      "precision": 0.3636,
+      "recall": 0.8571,
+      "f1": 0.5106,
+      "auroc": 0.8897,
+      "n": 284,
+      "hallucinated": 14
+    }
+  },
+  "latency_s": {
+    "median": 0.8,
+    "p95": 11.02
+  },
+  "tokens_per_check": {
+    "input": 764,
+    "output": 12
+  },
+  "usd_per_1000_checks_paid_tier": 0.259
+}
