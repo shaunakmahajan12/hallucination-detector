@@ -21,6 +21,14 @@ Conventions: `label` 1 means hallucinated (unsupported). A higher `score` means 
 The Gemini judge answers 0 or 1, so its `score` is binary and its AUROC is only a rough figure.
 The Gemini sample is 987 sentences with 70 hallucinated: say "comparable", never "beats", for differences this small.
 
+## Workbook files (`workbooks/`)
+
+| File | What | In git |
+|---|---|---|
+| `RAG Hallucination Detector Evaluation (Public).twbx` | the published dashboard, packaged with its Hyper extracts; opens anywhere | yes |
+| `RAG Hallucination Detector Evaluation.twb` | the editable workbook the builder writes, reading `data/*.csv` live | no (absolute local paths) |
+| `base.twb` | the builder's input: only the 8 CSV connections | no (absolute local paths) |
+
 ## Build the workbook
 
 The workbook is generated, not hand-built. `build_workbook.py` writes the Threshold parameter, the calculated fields,
@@ -29,7 +37,8 @@ ten worksheets and the dashboard into a base workbook that only has the CSV conn
 1. `python3 scripts/export_tableau.py` to refresh `data/`.
 2. In Tableau, connect each `data/*.csv` as its own data source (Data > New Data Source > Text file) and save that
    workbook. This is the base. Tableau writes the connection blocks and their internal names.
-3. Close it in Tableau, then `python3 tableau/build_workbook.py <base.twb> <out.twb>` and open `<out.twb>`.
+3. Close it in Tableau, then `python3 tableau/build_workbook.py tableau/workbooks/base.twb "tableau/workbooks/RAG Hallucination
+   Detector Evaluation.twb"` and open the output.
 
 The builder repairs a source whose table points at the wrong CSV, and refreshes a source whose CSV gained columns.
 
@@ -52,7 +61,7 @@ Publishing needs the free **Tableau Public** app (Desktop Public Edition); regul
 license. Tableau Public also refuses live CSV connections, so:
 
 1. Export a packaged workbook (File > Export Packaged Workbook).
-2. `python tableau/package_extracts.py <in.twbx> <out.twbx>` writes a Hyper file per CSV and points each data
+2. `python tableau/package_extracts.py <in.twbx> "tableau/workbooks/RAG Hallucination Detector Evaluation (Public).twbx"` writes a Hyper file per CSV and points each data
    source at it, the way Tableau's sample workbooks connect to Hyper. It needs `pip install tableauhyperapi` on
    Python 3.11 or 3.12. An `<extract>` block added next to the CSV connection fails to load in 2026.3.
 3. Open `<out.twbx>` in Tableau Public, then File > Save to Tableau Public As. Add the link to the repo README.

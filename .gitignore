@@ -8,3 +8,6 @@ __pycache__/
 .pytest_cache/
 .env
 .DS_Store
+
+# Tableau workbooks with absolute local paths (the packaged .twbx is committed)
+tableau/workbooks/*.twb
