@@ -8,6 +8,10 @@ Docker image.
 Every number below is recomputed from prediction files committed in [`results/`](results/)
 (`python eval/evaluate.py ...`), so each one traces to a file.
 
+**Interactive dashboard:** [RAG Hallucination Detector Evaluation on Tableau Public](https://public.tableau.com/app/profile/shaunak.rahul.mahajan/viz/RAGHallucinationDetectorEvaluation/Evaluation)
+(threshold slider with live precision, recall and F1, breakdowns by task and LLM, LLM-AggreFact, calibration, speed).
+Built from [`tableau/`](tableau/).
+
 ## Results
 
 ### RAGTruth test set (18,965 sentences, 8.2% hallucinated)

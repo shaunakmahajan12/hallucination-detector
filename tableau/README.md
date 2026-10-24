@@ -49,5 +49,10 @@ Tableau 2026.3 quirks found while building (each checked against Tableau's own l
 ## Publish
 
 Publishing needs the free **Tableau Public** app (Desktop Public Edition); regular Tableau Desktop asks for a
-license. Export a packaged workbook (File > Export Packaged Workbook), open the `.twbx` in Tableau Public, then
-File > Save to Tableau Public As. Add the link to the repo README once it is live.
+license. Tableau Public also refuses live CSV connections, so:
+
+1. Export a packaged workbook (File > Export Packaged Workbook).
+2. `python tableau/package_extracts.py <in.twbx> <out.twbx>` writes a Hyper file per CSV and points each data
+   source at it, the way Tableau's sample workbooks connect to Hyper. It needs `pip install tableauhyperapi` on
+   Python 3.11 or 3.12. An `<extract>` block added next to the CSV connection fails to load in 2026.3.
+3. Open `<out.twbx>` in Tableau Public, then File > Save to Tableau Public As. Add the link to the repo README.
